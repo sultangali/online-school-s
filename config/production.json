@@ -1,5 +1,5 @@
 {
     "port": 5000,
     "dbUrl": "mongodb://127.0.0.1:27017/schoolOnlineDB",
-    "jwt_key": "your_strong_production_jwt_key"
+    "jwt_key": "qwerty"
 } 
