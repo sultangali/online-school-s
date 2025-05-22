@@ -139,12 +139,16 @@ export const login = async (req, res) => {
 
 
 export const me = async (req, res) => {
+  console.log('👤 /me controller called')
   try {
     const userId = req.userId;
+    console.log('🆔 User ID from request:', userId)
 
     const user = await User.findById(userId);
+    console.log('🔍 User found?', !!user)
     
     if (!user) {
+      console.log('❌ User not found in database')
       return res.status(404).json({
         message: "Қолданушы табылмады"
       });
@@ -155,10 +159,12 @@ export const me = async (req, res) => {
       .exec();
 
     const { password, ...userData } = populatedUser._doc;
+    console.log('✅ Returning user data for:', userData.username || userData.email)
 
     return res.status(200).json(userData);
 
   } catch (error) {
+    console.log('❌ Error in me controller:', error.message)
     return res.status(500).json({ message: error.message });
   }
 };

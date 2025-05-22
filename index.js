@@ -14,6 +14,12 @@ const PORT = config.get('port')
 
 app.use(express.json())
 
+// Add request logging middleware
+app.use((req, res, next) => {
+  console.log(`📥 ${new Date().toISOString()} | ${req.method} ${req.originalUrl} | IP: ${req.ip}`);
+  next();
+});
+
 app.use('/upload', express.static('upload'))
 app.use('/images', express.static('images'))
 
