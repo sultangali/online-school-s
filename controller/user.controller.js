@@ -144,6 +144,14 @@ export const me = async (req, res) => {
     const userId = req.userId;
     console.log('🆔 User ID from request:', userId)
 
+    // Add additional check for undefined userId
+    if (!userId) {
+      console.log('❌ User ID is undefined - middleware should have blocked this')
+      return res.status(403).json({
+        message: "Рұқсат жоқ! Токен жоқ."
+      });
+    }
+
     const user = await User.findById(userId);
     console.log('🔍 User found?', !!user)
     
