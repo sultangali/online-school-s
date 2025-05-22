@@ -32,7 +32,7 @@ export const registration = async (req, res) => {
 
 
     async function generateUsername(firstname, lastname, patronymic) {
-      let username = transliterate(`${lastname}${firstname}${patronymic}`).replace(/['’`]/g, '').replace(/\s+/g, '');
+      let username = transliterate(`${lastname}${firstname}${patronymic}`).replace(/[''`]/g, '').replace(/\s+/g, '');
 
       // Проверяем уникальность логина
       let isUnique = false;
@@ -142,20 +142,24 @@ export const me = async (req, res) => {
   try {
     const userId = req.userId;
 
-    let user = "";
-
-    if (Boolean(await User.findById(userId))) {
-      user = await User.findById(userId)
-        .populate("schedule")
-        .exec();
-
-      const { hashedPassword, ...userData } = user._doc;
-
-      res.status(200).json(userData);
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({
+        message: "Қолданушы табылмады"
+      });
     }
 
+    const populatedUser = await User.findById(userId)
+      .populate("schedule")
+      .exec();
+
+    const { password, ...userData } = populatedUser._doc;
+
+    return res.status(200).json(userData);
+
   } catch (error) {
-    res.status(500).json(error.message);
+    return res.status(500).json({ message: error.message });
   }
 };
 

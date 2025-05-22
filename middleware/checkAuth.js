@@ -4,19 +4,21 @@ import config from 'config'
 
 export const school = (req, res, next) => {
     const token = (req.headers.authorization || '').replace(/Bearer\s?/, '')
-    if (token) {
-        try {
-            const decoded = jwt.verify(token, config.get('jwt_key'))
-            req.userId = decoded._id
-            next()
-        } catch (error) {
-            res.status(403).json({
-                message: 'Рұқсат жоқ!'
-            })
-        }
-    } else {
-        res.status(403).json({
-            message: 'Рұқсат жоқ!'
+    
+    if (!token) {
+        return res.status(403).json({
+            message: 'Рұқсат жоқ! Токен жоқ.'
+        })
+    }
+    
+    try {
+        const decoded = jwt.verify(token, config.get('jwt_key'))
+        req.userId = decoded._id
+        next()
+    } catch (error) {
+        console.log("Token verification error:", error.message)
+        return res.status(403).json({
+            message: 'Рұқсат жоқ! Токен жарамсыз.'
         })
     }
 }

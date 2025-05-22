@@ -17,7 +17,15 @@ app.use(express.json())
 app.use('/upload', express.static('upload'))
 app.use('/images', express.static('images'))
 
-app.use(cors())
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://34.116.228.89'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept-Language']
+})) 
 
 const start = async () => {
     try {
